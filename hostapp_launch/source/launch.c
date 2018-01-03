@@ -311,5 +311,5 @@ void do_launch()
     printfsocket("Launch result: %x\n", result);
   }
 
-  // Launch result: 80aa001a :-(
+  // Success? ;-)
 }

@@ -176,26 +176,51 @@ int mount_procfs()
 
 patch_info shellcore_patches[32] =
 {
-  //{ "Enable Logging",                 0xF9664E, "\x00",     1 },
-  //{ "Enable Logging",                 0xF9664E, "\x01",     1 },
-  { "Allow WebProcess LaunchApp #1",  0x28CE09, "\x90\xE9", 2 },
-  { "Allow WebProcess LaunchApp #2",  0x28D02A, "\x90\xE9", 2 },
-  { "Allow WebProcess LaunchApp #3",  0x28D0E0, "\xEB",     1 },
+  //{ "Enable Logging",                               0xF9664E, "\x00", 1 },
+  //{ "Enable Logging",                               0xF9664E, "\x01", 1 },
+  { "Allow WebProcess LaunchApp #1",                0x28CE09, "\x90\xE9", 2 },
+  { "Allow WebProcess LaunchApp #2",                0x28D02A, "\x90\xE9", 2 },
+  { "Allow WebProcess LaunchApp #3",                0x28D0E0, "\xEB", 1 },
+
+  { "Enable /sce_video_service Mount",              0x27852D, "\x90\x90\x90\x90\x90\x90", 6 },
+  { "Enable /sce_video_service Mount",              0x278D6E, "\x90\x90", 2 },
+  { "Change /system/vsh/sce_video_service Mount",   0xC118F8, "/hostapp\0", 9 },
+  { "Change /sce_video_service Mount",              0xC11916, "/hostapp\0", 9 },
+
   { NULL, 0, NULL, 0 },
 };
+
+/*
+patch_info syscore_patches[32] =
+{
+  { "Enable printf",                  0x161A5, "\x90\x90", 2 },
+  { "Change printf argument",         0x161CA, "\x8B\x73\x64", 3 },
+  { "Change printf format",           0x936A7, "\nexecve error = %x\n", 19 },
+  { NULL, 0, NULL, 0 },
+};
+*/
 
 void do_patch()
 {
   int result;
 
-  int pid = find_process("SceShellCore");
-  if (pid < 0)
+  int shell_pid = find_process("SceShellCore");
+  if (shell_pid < 0)
   {
-    printfsocket("Failed to find SceShellCore: %d\n", pid);
+    printfsocket("Failed to find SceShellCore: %d\n", shell_pid);
     return;
   }
+  printfsocket("Found SceShellCore at pid %d!\n", shell_pid);
 
-  printfsocket("Found SceShellCore at pid %d!\n", pid);
+  /*
+  int sys_pid = find_process("SceSysCore");
+  if (sys_pid < 0)
+  {
+    printfsocket("Failed to find SceSysCore: %d\n", sys_pid);
+    return;
+  }
+  printfsocket("Found SceSysCore at pid %d!\n", sys_pid);
+  */
 
   result = mount_procfs();
   if (result)
@@ -204,5 +229,7 @@ void do_patch()
   }
 
   printfsocket("Patching SceShellCore...\n");
-  apply_patches(pid, 0xF18000, shellcore_patches);
+  apply_patches(shell_pid, 0xF18000, shellcore_patches);
+  //printfsocket("Patching SceSysCore...\n");
+  //apply_patches(sys_pid, 0xC4000, syscore_patches);
 }
