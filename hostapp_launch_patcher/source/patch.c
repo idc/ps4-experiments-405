@@ -178,14 +178,12 @@ patch_info shellcore_patches[32] =
 {
   //{ "Enable Logging",                               0xF9664E, "\x00", 1 },
   //{ "Enable Logging",                               0xF9664E, "\x01", 1 },
+
   { "Allow WebProcess LaunchApp #1",                0x28CE09, "\x90\xE9", 2 },
   { "Allow WebProcess LaunchApp #2",                0x28D02A, "\x90\xE9", 2 },
   { "Allow WebProcess LaunchApp #3",                0x28D0E0, "\xEB", 1 },
 
-  { "Enable /sce_video_service Mount",              0x27852D, "\x90\x90\x90\x90\x90\x90", 6 },
-  { "Enable /sce_video_service Mount",              0x278D6E, "\x90\x90", 2 },
-  { "Change /system/vsh/sce_video_service Mount",   0xC118F8, "/hostapp\0", 9 },
-  { "Change /sce_video_service Mount",              0xC11916, "/hostapp\0", 9 },
+  { "Enable Development Mounts",                    0x276A83, "\xEB", 1 },
 
   { NULL, 0, NULL, 0 },
 };
